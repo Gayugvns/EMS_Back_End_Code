@@ -21,16 +21,14 @@ const connectDB = async () => {
             }
         );
         
-        console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-        console.log(`📊 Database: ${conn.connection.name}`);
+     
         
     } catch (error) {
-        console.error('❌ MongoDB Connection Error:', error.message);
         process.exit(1);
     }
 };
 
-// ========== MIDDLEWARE ==========
+//MIDDLEWERE
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,7 +36,6 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ========== ROUTES ==========
 
 // Test route
 // app.get('/api/test', (req, res) => {
@@ -80,20 +77,15 @@ app.get('/', (req, res) => {
 try {
     const employeeRoutes = require('./src/routes/employeeRoutes');
     app.use('/api/employees', employeeRoutes);
-    console.log('✅ Employee routes loaded');
 } catch (error) {
-    console.log('⚠️ Employee routes not loaded:', error.message);
 }
 
 try {
     const authRoutes = require('./src/routes/authRoutes');
     app.use('/api/auth', authRoutes);
-    console.log('✅ Auth routes loaded');
 } catch (error) {
-    console.log('⚠️ Auth routes not loaded:', error.message);
 }
-
-// ========== ERROR HANDLING ==========
+//Error handleling
 app.use('*', (req, res) => {
     res.status(404).json({
         success: false,
@@ -108,13 +100,10 @@ const startServer = async () => {
         
         const PORT = process.env.PORT || 5000;
         app.listen(PORT, () => {
-            console.log(`\n🚀 Server running on port ${PORT}`);
-            console.log(`🌐 http://localhost:${PORT}`);
-            console.log(`📊 MongoDB: Connected`);
+           
         });
         
     } catch (error) {
-        console.error('❌ Failed to start server:', error);
         process.exit(1);
     }
 };

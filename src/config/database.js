@@ -10,15 +10,12 @@ class Database {
       await mongoose.connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        autoIndex: true, // Enable automatic index creation
-        maxPoolSize: 10, // Maintain up to 10 socket connections
-        serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
-        socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+        autoIndex: true, 
+        maxPoolSize: 10, 
+        serverSelectionTimeoutMS: 5000, 
+        socketTimeoutMS: 45000, 
       });
 
-      console.log('MongoDB Connected Successfully');
-      console.log(`Database: ${mongoose.connection.name}`);
-      console.log(`Host: ${mongoose.connection.host}`);
       
       // Initialize dynamic collections
       await this.initializeDynamicCollections();
@@ -52,7 +49,6 @@ class Database {
     await Employee.createIndexes();
     await Config.createIndexes();
     
-    console.log('✅ Database indexes created successfully');
   }
 
   static getInstance() {

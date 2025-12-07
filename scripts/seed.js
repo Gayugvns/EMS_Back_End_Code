@@ -12,14 +12,12 @@ const seedDatabase = async () => {
       useUnifiedTopology: true,
     });
 
-    console.log('✅ Connected to MongoDB');
 
     // Clear existing data
     await User.deleteMany({});
     await Config.deleteMany({});
     await Employee.deleteMany({});
 
-    console.log('🗑️  Cleared existing data');
 
     // Create admin user
     const admin = await User.create({
@@ -30,13 +28,11 @@ const seedDatabase = async () => {
       department: 'Administration'
     });
 
-    console.log('👤 Created admin user:', admin.email);
 
-    // Initialize configurations
+    // initialize configurations
     await Config.initializeDefaults(admin._id);
-    console.log('⚙️  Initialized default configurations');
 
-    // Create sample employees
+    // Create  employees
     const sampleEmployees = [
       {
         name: 'John Doe',
@@ -101,7 +97,6 @@ const seedDatabase = async () => {
     ];
 
     const employees = await Employee.insertMany(sampleEmployees);
-    console.log(`👥 Created ${employees.length} sample employees`);
 
     // Update dynamic lists with sample data
     const designations = [...new Set(sampleEmployees.map(e => e.designation))];
@@ -119,17 +114,10 @@ const seedDatabase = async () => {
       userId: admin._id
     });
 
-    console.log('📊 Updated dynamic lists from sample data');
-
-    console.log('\n🎉 Seeding completed successfully!');
-    console.log('\n🔑 Login Credentials:');
-    console.log('Email: admin@company.com');
-    console.log('Password: Admin@123');
-    console.log('\n📁 Database is ready for use.');
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    console.error(' Error seeding database:', error);
     process.exit(1);
   }
 };

@@ -8,17 +8,15 @@ const {
   getCurrentUser,
 } = require('../services/authService');
 
-// ================= HELPER =================
+//helper
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 };
-
-// ================= REGISTER =================
+//register
 router.post('/register', async (req, res) => {
   try {
-    console.log('📝 Registration request received:', req.body.email);
 
     const { name, email, password, role } = req.body;
 
@@ -36,7 +34,6 @@ router.post('/register', async (req, res) => {
       role: role || 'user',
     });
 
-    console.log('✅ User registered successfully');
 
     return res.status(201).json({
       success: true,
@@ -44,7 +41,7 @@ router.post('/register', async (req, res) => {
       data: result,
     });
   } catch (error) {
-    console.error('❌ Registration error:', error.message);
+    console.error('Registration error:', error.message);
 
     if (error.message.includes('already exists')) {
       return res.status(400).json({
@@ -59,11 +56,9 @@ router.post('/register', async (req, res) => {
     });
   }
 });
-
-// ================= LOGIN (✅ FULL DATA FIX) =================
+//login
 router.post('/login', async (req, res) => {
   try {
-    console.log('🔐 Login attempt for:', req.body.email);
 
     const { email, password } = req.body;
 
@@ -74,7 +69,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // ✅ Authenticate user
+    //  Authenticate user
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({
@@ -91,10 +86,10 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // ✅ Generate JWT
+    // Generate JWT
     const token = generateToken(user._id, user.role);
 
-    // ✅ FINAL RESPONSE (THIS FIXES YOUR ISSUE)
+    // FINAL RESPONSE 
     const responseBody = {
       success: true,
       message: 'Login successful',
@@ -110,11 +105,10 @@ router.post('/login', async (req, res) => {
       },
     };
 
-    console.log('🔥 FINAL LOGIN RESPONSE BEING SENT:', responseBody);
 
     return res.status(200).json(responseBody);
   } catch (error) {
-    console.error('❌ Login error:', error.message);
+    console.error('Login error:', error.message);
 
     return res.status(500).json({
       success: false,
@@ -122,8 +116,7 @@ router.post('/login', async (req, res) => {
     });
   }
 });
-
-// ================= GET CURRENT USER (TEST) =================
+//current user
 router.get('/me', async (req, res) => {
   try {
     const user = await User.findOne().sort({ createdAt: -1 });
@@ -147,20 +140,18 @@ router.get('/me', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('❌ Error getting user:', error);
+    console.error(' Error getting user:', error);
     return res.status(500).json({
       success: false,
       error: 'Server error',
     });
   }
 });
-
-// ================= DEBUG USERS =================
+//debug user
 router.get('/debug/users', async (req, res) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
 
-    console.log(`📊 Found ${users.length} users in database`);
 
     return res.json({
       success: true,
@@ -181,8 +172,8 @@ router.get('/debug/users', async (req, res) => {
     });
   }
 });
+//check mail
 
-// ================= CHECK EMAIL =================
 router.get('/check/:email', async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email });

@@ -195,7 +195,6 @@ configSchema.statics.initializeDefaults = async function(userId) {
     );
   }
   
-  console.log('✅ Default configurations initialized');
 };
 
 // Indexes for performance
